@@ -135,6 +135,12 @@ func (t *TmuxSession) Start(workDir string) error {
 		log.InfoLog.Printf("Warning: failed to set history-limit for session %s: %v", t.sanitizedName, err)
 	}
 
+	// Enable mouse scrolling for the session
+	mouseCmd := exec.Command("tmux", "set-option", "-t", t.sanitizedName, "mouse", "on")
+	if err := t.cmdExec.Run(mouseCmd); err != nil {
+		log.InfoLog.Printf("Warning: failed to enable mouse scrolling for session %s: %v", t.sanitizedName, err)
+	}
+
 	err = t.Restore()
 	if err != nil {
 		if cleanupErr := t.Close(); cleanupErr != nil {
